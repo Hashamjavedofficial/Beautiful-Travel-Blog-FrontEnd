@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import PlaceList from "../components/PlaceList";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const DUMMY_PLACES = [
   {
@@ -34,8 +37,34 @@ const DUMMY_PLACES = [
 
 const UserPlaces = () => {
   const userId = useParams().userId;
-  const loadedPlaces = DUMMY_PLACES.filter((place) => place.creator === userId);
-  return <PlaceList items={loadedPlaces} />;
+
+  const [places, setPlaces] = useState(null);
+  const { isLoading, clearError, sendRequest, error } = useHttpClient();
+
+  useEffect(() => {
+    const getPlaces = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/places/user/${userId}`
+        );
+        setPlaces(responseData.places);
+      } catch (err) {}
+    };
+    getPlaces();
+  }, [sendRequest, userId]);
+
+  return (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && (
+        <div className={"center"}>
+          <LoadingSpinner />
+        </div>
+      )}
+
+      {!isLoading && places && <PlaceList items={places} />}
+    </React.Fragment>
+  );
 };
 
 export default UserPlaces;
