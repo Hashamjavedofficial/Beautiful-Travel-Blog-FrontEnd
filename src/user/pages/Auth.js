@@ -74,8 +74,7 @@ const Auth = () => {
             "Content-Type": "application/json",
           }
         );
-        console.log(responseData);
-        auth.login();
+        auth.login(responseData.user.id);
       } catch (err) {}
     } else {
       try {
@@ -91,8 +90,7 @@ const Auth = () => {
             "Content-Type": "application/json",
           }
         );
-        console.log(responseData);
-        auth.login();
+        auth.login(responseData.user.id);
       } catch (err) {}
     }
   };
