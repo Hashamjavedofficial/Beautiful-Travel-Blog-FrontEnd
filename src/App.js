@@ -76,7 +76,9 @@ const App = () => {
             fallback={
               <div className={"center"}>
                 <LoadingSpinner />
-                <span>as;ldka;slkd</span>
+                <LoadingSpinner />
+                <LoadingSpinner />
+                <h1>Hasham</h1>
               </div>
             }
           >
